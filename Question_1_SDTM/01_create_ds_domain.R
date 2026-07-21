@@ -1,4 +1,4 @@
-#####################################
+####################################################################################
 # 
 # Program Name : 01_create_ds_domain.R
 #
@@ -6,11 +6,11 @@
 #
 # Author: Sara Denner
 #
-####################################
+####################################################################################
 
-############
+###########################################################
 # STEP 0) Initialize Project Directories and Log
-############
+###########################################################
 
 question_dir <- "Question_1_SDTM"
 
@@ -31,9 +31,9 @@ cat("Question 1 - Create DS Domain\n")
 cat("Started:", format(Sys.time()), "\n")
 cat("========================================\n\n")
 
-############
+##############################################################################
 # STEP 1) Load required packages, Read in data, and explore SDTM.OAK package
-############
+##############################################################################
 
 library(pharmaverseraw)
 library(pharmaversesdtm)
@@ -66,22 +66,22 @@ ds_raw <- ds_raw %>%
     raw_src = "ds_raw"
   )
 
-################
+####################################################
 # STEP 3) Read in Controlled Terminology(CT)
-################
+####################################################
 
 # first, download the CSV into this project. To do this, I downloaded directly from the 
 # GitHub link, and uploaded into a new 'metadata' folder within the repo.
 study_ct <- read.csv("metadata/sdtm_ct.csv")
 
-###############
+############################################################################################
 # STEP 4) Map Topic Variable
 #
 # In DS, the topic variable is DSTERM. We will map this from IT.DSTERM, where here
 # IT is raw_ds dataset.
 # According to aCRF, "If OTHERSP is null, map the value in IT.DSTERM to DSTERM. Else if 
 # OTHERSP is not null, map the value in OTHERSP to DSTERM"
-###############
+############################################################################################
 
 # there is no CT for DSTERM, so we will use the assign_no_ct function.
 # Since we need to add a condition, we will use the condition_add function.
@@ -114,9 +114,9 @@ ds <- assign_no_ct(
   id_vars = oak_id_vars()
 )
 
-######################
+##########################################################
 # STEP 5) Map Rest of the Variables
-######################
+##########################################################
 
 ### Controlled Terminology Update
 
@@ -406,17 +406,22 @@ ds <- ds %>%
     id_vars = oak_id_vars()
   )
 
-######################
+########################################################
 # STEP 6) Create SDTM Derived Variables
 # Derive STUDYID, DOMAIN, USUBJID, DSSEQ, DSSTDY
-######################
+########################################################
 
 ds <- ds %>%
   dplyr::mutate(
     STUDYID = ds_raw$STUDY,
     DOMAIN = "DS",
     USUBJID = paste0("01-", ds_raw$PATNUM),
-    DSTERM = toupper(DSTERM)
+    DSTERM = toupper(DSTERM),
+    DSDECOD = toupper(DSDECOD)
+  ) %>%
+  # sort by subject, start date of event, DSTERM
+  dplyr::arrange(
+    USUBJID, DSSTDTC, DSTERM
   ) %>%
   derive_seq(
     tgt_var = "DSSEQ",
@@ -434,9 +439,9 @@ ds <- ds %>%
     "DSDTC", "DSSTDTC", "DSSTDY"
   )
 
-######################
+###########################################
 # STEP 7) Add Variable Labels
-######################
+###########################################
 
 ds_labels <- c(
   STUDYID = "Study Identifier",
@@ -457,9 +462,9 @@ for (v in names(ds_labels)) {
   attr(ds[[v]], "label") <- ds_labels[[v]]
 }
 
-##################
+###################################################
 # STEP 8) Output Final Dataset and Log File
-##################
+###################################################
 
 #output
 write.csv(
