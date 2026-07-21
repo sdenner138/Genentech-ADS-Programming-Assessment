@@ -1,6 +1,6 @@
 ========================================
 Question 1 - Create DS Domain
-Started: 2026-07-21 20:39:33 
+Started: 2026-07-21 20:43:19 
 ========================================
 
  [1] "STUDY"      "PATNUM"     "SITENM"     "INSTANCE"   "FORM"       "FORML"      "IT.DSTERM" 
@@ -95,7 +95,7 @@ $ DEATHDT    <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N
 
 ========================================
 Program completed successfully
-Completed: 2026-07-21 20:40:06 
+Completed: 2026-07-21 20:43:56 
 
 Dataset summary
 ----------------------------
@@ -116,19 +116,128 @@ tibble [850 × 12] (S3: tbl_df/tbl/data.frame)
   ..- attr(*, "label")= chr "Unique Subject Identifier"
  $ DSSEQ   : int [1:850] 1 2 3 1 2 3 4 1 2 3 ...
   ..- attr(*, "label")= chr "Sequence Number"
- $ DSTERM  : chr [1:850] "FINAL LAB VISIT" "PROTOCOL COMPLETED" "RANDOMIZED" "ADVERSE EVENT" ...
+ $ DSTERM  : chr [1:850] "RANDOMIZED" "FINAL LAB VISIT" "PROTOCOL COMPLETED" "RANDOMIZED" ...
   ..- attr(*, "label")= chr "Reported Term for the Disposition Event"
- $ DSDECOD : chr [1:850] "FINAL LAB VISIT" "COMPLETED" "RANDOMIZED" "ADVERSE EVENT" ...
+ $ DSDECOD : chr [1:850] "RANDOMIZED" "FINAL LAB VISIT" "COMPLETED" "RANDOMIZED" ...
   ..- attr(*, "label")= chr "Standardized Disposition Term"
- $ DSCAT   : chr [1:850] "OTHER EVENT" "DISPOSITION EVENT" "PROTOCOL MILESTONE" "DISPOSITION EVENT" ...
+ $ DSCAT   : chr [1:850] "PROTOCOL MILESTONE" "OTHER EVENT" "DISPOSITION EVENT" "PROTOCOL MILESTONE" ...
   ..- attr(*, "label")= chr "Category for Disposition Event"
- $ VISITNUM: chr [1:850] "13" "13" "3" "5" ...
+ $ VISITNUM: chr [1:850] "3" "13" "13" "3" ...
   ..- attr(*, "label")= chr "Visit Number"
- $ VISIT   : chr [1:850] "WEEK 26" "WEEK 26" "BASELINE" "WEEK 4" ...
+ $ VISIT   : chr [1:850] "BASELINE" "WEEK 26" "WEEK 26" "BASELINE" ...
   ..- attr(*, "label")= chr "Visit Name"
- $ DSDTC   : 'iso8601' chr [1:850] "2014-07-02T11:45" "2014-07-02" "2014-01-02" "2012-09-02" ...
+ $ DSDTC   : 'iso8601' chr [1:850] "2014-01-02" "2014-07-02T11:45" "2014-07-02" "2012-08-05" ...
   ..- attr(*, "label")= chr "Date/Time of Collection"
- $ DSSTDTC : Date[1:850], format: "2014-07-02" "2014-07-02" "2014-01-02" ...
- $ DSSTDY  : int [1:850] 182 182 1 29 29 198 1 180 180 1 ...
+ $ DSSTDTC : Date[1:850], format: "2014-01-02" "2014-07-02" "2014-07-02" ...
+ $ DSSTDY  : int [1:850] 1 182 182 1 29 29 198 1 180 180 ...
+  ..- attr(*, "label")= chr "Study Day Start of Disposition Event"
+========================================
+chr>   <chr>   <chr>     
+1 CDISCPILOT… 701-1… CDISC… Baseline DISC1 Subj… Randomiz… Randomized <NA>    01-02-… <NA>    01-02-2014
+2 CDISCPILOT… 701-1… CDISC… Week 26  DISC1 Subj… Protocol… Completed  <NA>    07-02-… <NA>    07-02-2014
+3 CDISCPILOT… 701-1… CDISC… Week 26  DISC1 Subj… <NA>      <NA>       Final … 07-02-… 11:45   07-02-2014
+4 CDISCPILOT… 701-1… CDISC… Baseline DISC1 Subj… Randomiz… Randomized <NA>    08-05-… <NA>    08-05-2012
+5 CDISCPILOT… 701-1… CDISC… Week 4   DISC1 Subj… Adverse … Adverse E… <NA>    09-02-… <NA>    09-02-2012
+6 CDISCPILOT… 701-1… CDISC… Week 4   DISC1 Subj… <NA>      <NA>       Final … 09-02-… 10:15   09-02-2012
+# ℹ 1 more variable: DEATHDT <chr>
+# A tibble: 6 × 28
+  STUDYID   DOMAIN USUBJID SUBJID RFSTDTC RFENDTC RFXSTDTC RFXENDTC RFICDTC RFPENDTC DTHDTC DTHFL SITEID
+  <chr>     <chr>  <chr>   <chr>  <chr>   <chr>   <chr>    <chr>    <chr>   <chr>    <chr>  <chr> <chr> 
+1 CDISCPIL… DM     01-701… 1015   2014-0… 2014-0… 2014-01… 2014-07… <NA>    2014-07… <NA>   <NA>  701   
+2 CDISCPIL… DM     01-701… 1023   2012-0… 2012-0… 2012-08… 2012-09… <NA>    2013-02… <NA>   <NA>  701   
+3 CDISCPIL… DM     01-701… 1028   2013-0… 2014-0… 2013-07… 2014-01… <NA>    2014-01… <NA>   <NA>  701   
+4 CDISCPIL… DM     01-701… 1033   2014-0… 2014-0… 2014-03… 2014-03… <NA>    2014-09… <NA>   <NA>  701   
+5 CDISCPIL… DM     01-701… 1034   2014-0… 2014-1… 2014-07… 2014-12… <NA>    2014-12… <NA>   <NA>  701   
+6 CDISCPIL… DM     01-701… 1047   2013-0… 2013-0… 2013-02… 2013-03… <NA>    2013-07… <NA>   <NA>  701   
+# ℹ 15 more variables: BRTHDTC <chr>, AGE <dbl>, AGEU <chr>, SEX <chr>, RACE <chr>, ETHNIC <chr>,
+#   ARMCD <chr>, ARM <chr>, ACTARMCD <chr>, ACTARM <chr>, COUNTRY <chr>, DMDTC <chr>, DMDY <dbl>,
+#   ARMNRS <chr>, ACTARMUD <chr>
+   codelist_code             collected_value                  term_value              term_synonyms
+1         C66727               Adverse Event               ADVERSE EVENT              ADVERSE EVENT
+2         C66727                    Complete                   COMPLETED                   COMPLETE
+3         C66727                        Dead                       DEATH                      Death
+4         C66727            Lack of Efficacy            LACK OF EFFICACY                           
+5         C66727           Lost To Follow-Up           LOST TO FOLLOW-UP                           
+6         C66727          Physician Decision          PHYSICIAN DECISION                           
+7         C66727          Protocol Violation          PROTOCOL VIOLATION                           
+8         C66727        Trial Screen Failure              SCREEN FAILURE                           
+9         C66727 Study Terminated By Sponsor STUDY TERMINATED BY SPONSOR                           
+10        C66727       Withdrawal by Subject       WITHDRAWAL BY SUBJECT Discontinued Participation
+   codelist_code     collected_value          term_value term_synonyms
+1          VISIT Ambul ECG Placement AMBUL ECG PLACEMENT              
+2          VISIT   Ambul ECG Removal   AMBUL ECG REMOVAL              
+3          VISIT            Baseline            BASELINE              
+4          VISIT           Retrieval           RETRIEVAL              
+5          VISIT           Screening           SCREENING              
+6          VISIT         Screening 1         SCREENING 1    Screening1
+7          VISIT         Screening 2         SCREENING 2    Screening2
+8          VISIT     Unscheduled 3.1     UNSCHEDULED 3.1              
+9          VISIT             Visit 1             VISIT 1              
+10         VISIT             Week 12             WEEK 12        Week12
+11         VISIT             Week 16             WEEK 16        Week16
+12         VISIT              Week 2              WEEK 2         Week2
+13         VISIT             Week 20             WEEK 20        Week20
+14         VISIT             Week 24             WEEK 24        Week24
+15         VISIT             Week 26             WEEK 26        Week26
+16         VISIT              Week 4              WEEK 4         Week4
+17         VISIT              Week 6              WEEK 6         Week6
+18         VISIT              Week 8              WEEK 8         Week8
+   codelist_code     collected_value term_value term_synonyms
+1       VISITNUM           Screening          1              
+2       VISITNUM         Screening 1          1    Screening1
+3       VISITNUM             Week 16         10        Week16
+4       VISITNUM             Week 20         11        Week20
+5       VISITNUM             Week 24         12        Week24
+6       VISITNUM             Week 26         13        Week26
+7       VISITNUM             Visit 1          2              
+8       VISITNUM         Screening 2          2    Screening2
+9       VISITNUM           Retrieval        201              
+10      VISITNUM            Baseline          3      BASELINE
+11      VISITNUM     Unscheduled 3.1        3.1              
+12      VISITNUM Ambul ECG Placement        3.5              
+13      VISITNUM              Week 2          4         Week2
+14      VISITNUM              Week 4          5         Week4
+15      VISITNUM   Ambul ECG Removal          6              
+16      VISITNUM              Week 6          7         Week6
+17      VISITNUM              Week 8          8         Week8
+18      VISITNUM             Week 12          9        Week12
+
+========================================
+Program completed successfully
+Completed: 2026-07-21 20:43:56 
+
+Dataset summary
+----------------------------
+Rows: 850 
+Columns: 12 
+
+Variable names:
+ [1] "STUDYID"  "DOMAIN"   "USUBJID"  "DSSEQ"    "DSTERM"   "DSDECOD"  "DSCAT"    "VISITNUM" "VISIT"   
+[10] "DSDTC"    "DSSTDTC"  "DSSTDY"  
+
+Structure:
+tibble [850 × 12] (S3: tbl_df/tbl/data.frame)
+ $ STUDYID : chr [1:850] "CDISCPILOT01" "CDISCPILOT01" "CDISCPILOT01" "CDISCPILOT01" ...
+  ..- attr(*, "label")= chr "Study Identifier"
+ $ DOMAIN  : chr [1:850] "DS" "DS" "DS" "DS" ...
+  ..- attr(*, "label")= chr "Domain Abbreviation"
+ $ USUBJID : chr [1:850] "01-701-1015" "01-701-1015" "01-701-1015" "01-701-1023" ...
+  ..- attr(*, "label")= chr "Unique Subject Identifier"
+ $ DSSEQ   : int [1:850] 1 2 3 1 2 3 4 1 2 3 ...
+  ..- attr(*, "label")= chr "Sequence Number"
+ $ DSTERM  : chr [1:850] "RANDOMIZED" "FINAL LAB VISIT" "PROTOCOL COMPLETED" "RANDOMIZED" ...
+  ..- attr(*, "label")= chr "Reported Term for the Disposition Event"
+ $ DSDECOD : chr [1:850] "RANDOMIZED" "FINAL LAB VISIT" "COMPLETED" "RANDOMIZED" ...
+  ..- attr(*, "label")= chr "Standardized Disposition Term"
+ $ DSCAT   : chr [1:850] "PROTOCOL MILESTONE" "OTHER EVENT" "DISPOSITION EVENT" "PROTOCOL MILESTONE" ...
+  ..- attr(*, "label")= chr "Category for Disposition Event"
+ $ VISITNUM: chr [1:850] "3" "13" "13" "3" ...
+  ..- attr(*, "label")= chr "Visit Number"
+ $ VISIT   : chr [1:850] "BASELINE" "WEEK 26" "WEEK 26" "BASELINE" ...
+  ..- attr(*, "label")= chr "Visit Name"
+ $ DSDTC   : 'iso8601' chr [1:850] "2014-01-02" "2014-07-02T11:45" "2014-07-02" "2012-08-05" ...
+  ..- attr(*, "label")= chr "Date/Time of Collection"
+ $ DSSTDTC : Date[1:850], format: "2014-01-02" "2014-07-02" "2014-07-02" ...
+ $ DSSTDY  : int [1:850] 1 182 182 1 29 29 198 1 180 180 ...
   ..- attr(*, "label")= chr "Study Day Start of Disposition Event"
 ========================================

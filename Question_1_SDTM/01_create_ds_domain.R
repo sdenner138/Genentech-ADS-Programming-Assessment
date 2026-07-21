@@ -425,7 +425,7 @@ ds <- ds %>%
   ) %>%
   derive_seq(
     tgt_var = "DSSEQ",
-    rec_vars = c("USUBJID", "DSTERM")
+    rec_vars = c("USUBJID","DSSTDTC", "DSTERM")
   ) %>%
   derive_study_day(
     sdtm_in = .,
