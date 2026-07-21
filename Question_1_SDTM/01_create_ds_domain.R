@@ -417,15 +417,16 @@ ds <- ds %>%
     DOMAIN = "DS",
     USUBJID = paste0("01-", ds_raw$PATNUM),
     DSTERM = toupper(DSTERM),
-    DSDECOD = toupper(DSDECOD)
+    DSDECOD = toupper(DSDECOD),
+    VISITNUM = as.numeric(VISITNUM)
   ) %>%
   # sort by subject, start date of event, DSTERM
   dplyr::arrange(
-    USUBJID, DSSTDTC, DSTERM
+    USUBJID, DSDTC, DSTERM
   ) %>%
   derive_seq(
     tgt_var = "DSSEQ",
-    rec_vars = c("USUBJID","DSSTDTC", "DSTERM")
+    rec_vars = c("USUBJID","DSDTC", "DSTERM")
   ) %>%
   derive_study_day(
     sdtm_in = .,
