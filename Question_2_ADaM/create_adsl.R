@@ -198,8 +198,8 @@ adsl <- adsl %>%
         # Spec says that [VS.VSSTRESN] and [VS.VSSTRESC] "not both missing". I am 
         # interpreting this as "anything else but (both of them are missing)", 
         # meaning that one could be missing and the other is not missing.
-        # I think that makes sense, since in SDTM VS, a character result for VSSTRESC
-        # would not have a value for VSSTRESN.  
+        # I think that makes sense, since in SDTM VS, a non-numeric result for VSSTRESC
+        # would be null in VSSTRESN, while a numeric result for VSSTRESC would have both populated.  
         condition = !(is.na(VSSTRESN) & is.na(VSSTRESC)) &
                     !is.na(convert_dtc_to_dt(VSDTC)),
         
@@ -256,31 +256,37 @@ adsl <- adsl %>%
     mode = "last",
     new_vars = exprs(LSTALVDT)
   ) %>%
+  
+  # Get all required variables per ADaMIG v1.3, all other derived variables, and core DM variables
   select(
-    
-  )
+    "STUDYID", "USUBJID", "SUBJID", "SITEID","COUNTRY", "AGE", "AGEU", "AGEGR9", "AGEGR9N", "SEX", "RACE", 
+    "ETHNIC","DMDTC","DMDY", "ITTFL", "ARM", "ARMCD", "ACTARM", "ACTARMCD","ARMNRS","ACTARMUD", "TRT01P", "TRT01A", 
+    "TRTSDT", "TRTSDTM","TRTSTMF", "TRTEDT", "TRTEDTM","TRTETMF", "BRTHDTC", "DTHFL", "DTHDTC", "LSTALVDT"
+  ) %>%
+  
+  # Sort by STUDYID, USUBJID
+  dplyr::arrange("STUDYID", "USUBJID")
 
 ###########################################
 # STEP 7) Add Variable Labels
 ###########################################
 
-adslds_labels <- c(
-  STUDYID = "Study Identifier",
-  DOMAIN  = "Domain Abbreviation",
-  USUBJID = "Unique Subject Identifier",
-  DSSEQ   = "Sequence Number",
-  DSTERM  = "Reported Term for the Disposition Event",
-  DSDECOD = "Standardized Disposition Term",
-  DSCAT   = "Category for Disposition Event",
-  VISITNUM= "Visit Number",
-  VISIT   = "Visit Name",
-  DSDTC   = "Date/Time of Collection",
-  DSSTDTC = "Start Date/Time of Disposition Event",
-  DSSTDY  = "Study Day Start of Disposition Event"
+adsl_labels <- c(
+  AGEGR9 = "Pooled Age Group 9",
+  AGEGR9N = "Pooled Age Group 9 (N)",
+  ITTFL = "Intent-To-Treat Population Flag",
+  TRTSDT = "Date of First Exposure to Treatment",
+  TRTSDTM = "Datetime of First Exposure to Treatment",
+  TRTSTMF = "Time of First Exposure Imput. Flag",
+  TRTEDT = "Date of Last Exposure to Treatment",
+  TRTEDTM = "Datetime of Last Exposure to Treatment",
+  TRTETMF = "Time of Last Exposure Imput. Flag",
+  LSTALVDT = "Date Last Known Alive"
+  
 )
 
-for (v in names(ds_labels)) {
-  attr(adsl[[v]], "label") <- ds_labels[[v]]
+for (v in names(adsl_labels)) {
+  attr(adsl[[v]], "label") <- adsl_labels[[v]]
 }
 
 ###################################################
@@ -289,7 +295,7 @@ for (v in names(ds_labels)) {
 
 #output
 write.csv(
-  ds,
+  adsl,
   file = "Question_2_ADaM/output/adsl.csv",
   row.names = FALSE,
   na = ""
