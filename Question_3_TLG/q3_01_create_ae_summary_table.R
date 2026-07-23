@@ -20,7 +20,7 @@ log_dir <- file.path(question_dir, "logs")
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(log_dir, recursive = TRUE, showWarnings = FALSE)
 
-output_file <- file.path(output_dir, "teae_summary_table.html")
+output_file <- file.path(output_dir, "teae_summary_table.pdf")
 log_file <- file.path(log_dir, "q3_01_create_teae_summary_table.log")
 
 ### Start Log
@@ -198,7 +198,7 @@ tbl_gt <- tbl1 %>%
 
 
 ###########################################################################
-# STEP 5) Export Output as HTML, Generate Log File
+# STEP 5) Export Output as HTML and PDF, Generate Log File
 # Source A) https://gt.rstudio.com/reference/gtsave.html?q=html#examples
 ###########################################################################
 
@@ -206,7 +206,7 @@ tbl_gt <- tbl1 %>%
 gt::gtsave(
   data = tbl_gt,
   filename = "teae_summary_table.html",
-  path = "Question_3_TLG/output",
+  path = output_dir,
   inline_css = TRUE
 )
 
@@ -215,6 +215,33 @@ browseURL(
     "Question_3_TLG/output/teae_summary_table.html"
   )
 )
+
+# On GitHub, we aren't able to view the html file as a table. Let's also output as a pdf
+# for readability on GitHub. To do this, I have to install the webshot2 package, as
+# gt package uses webshot2 to create a PDF output.
+
+library(webshot2)
+library(chromote)
+
+old_chrome_args <- chromote::get_chrome_args()
+
+chromote::set_chrome_args(
+  unique(
+    c(
+      old_chrome_args,
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage"
+    )
+  )
+)
+
+gt::gtsave(
+  data = tbl_gt,
+  filename = "teae_summary_table.pdf",
+  path = output_dir
+)
+
 
 #log
 cat("\n========================================\n")
