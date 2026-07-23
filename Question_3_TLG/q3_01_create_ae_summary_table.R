@@ -206,7 +206,14 @@ tbl_gt <- tbl1 %>%
 gt::gtsave(
   data = tbl_gt,
   filename = "teae_summary_table.html",
-  path = "Question_3_TLG/output"
+  path = "Question_3_TLG/output",
+  inline_css = TRUE
+)
+
+browseURL(
+  normalizePath(
+    "Question_3_TLG/output/teae_summary_table.html"
+  )
 )
 
 #log
