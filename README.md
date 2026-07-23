@@ -15,6 +15,15 @@ The assessment demonstrates clinical programming skills using Pharmaverse in R a
 
 # Repository Structure
 
+## Rendered Output
+The Question 3 summary TEAE table is provided as both an interactive HTML output
+and a corresponding HTML file. Please view the rendered table below:
+
+**[View the rendered Treatment-Emergent Adverse Events table](https://sdenner138.github.io/Genentech-ADS-Programming-Assessment/Question_3_TLG/teae_summary_table.html)**
+
+The corresponding HTML file is also retained in:
+`Question_3_TLG/output/teae_summary_table.html`
+
 ## Question_1_SDTM
 
 Generate SDTM Disposition (DS) domain using the {sdtm.oak} package.
@@ -44,7 +53,10 @@ Deliverables:
 
 1. TEAE Summary table script
 2. TEAE Summary visualization script
-3. Output table
+3. Output table:
+  - [View the rendered TEAE summary table](https://sdenner138.github.io/Genentech-ADS-Programming-Assessment/Question_3_TLG/teae_summary_table.html)
+  - Source program: `Question_3_TLG/q3_01_create_ae_summary_table.R`
+  - Output file: `Question_3_TLG/output/teae_summary_table.html`
 4. Two Output PNG files
 5. Program logs
 
@@ -72,10 +84,10 @@ Contains supplementary documentation including:
 # Software
 
 - R 4.6.1
-- RStudio 2026.07
+- Posit Cloud
 - Python
 - Git
-- GitHub Desktop
+- GitHub
 
 ---
 
@@ -93,6 +105,9 @@ Contains supplementary documentation including:
 # Repository Status
 
 1. [7/15/2026 SD] GitHub Repository shell created, including file structure.
+2. [7/20/2026 SD] SDTM deliverables generated.
+3. [7/21/2026 SD] ADaM deliverables generated.
+4. [7/22/2026 SD] Summary TEAE table and corresponding deliverables generated.
 
 ---
 
