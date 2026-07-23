@@ -118,15 +118,25 @@ ds <- assign_no_ct(
 # STEP 5) Map Rest of the Variables
 ##########################################################
 
-### Controlled Terminology Update
+### Controlled Terminology Update ############################################
+#
+# 7/20/26 - 
+# in provided study controlled terminology (CT) dataset,
+# the values in the collected_value variable do not always match 
+# the corresponding values collected in the raw DS dataset. 
+# 
+# Since the terms are very similar, I can easily match the collected values
+# from the ds_raw dataset to the correct CT per CDISC standards.
+#
+# To do this, I will add records onto the CT dataset that map the correct CT
+# to the actual collected value in ds_raw.
+#
+# Within a codelist group, simply add records where 
+# collected_value = 'raw_ds_value' and term_value = 'correct CDISC CT value'
+# 
+### Controlled Terminology Update End ############################################
 
-# SD 7/20/2026 - Controlled Terminology has mismatching values between the "collected_value" variable
-# in study_ct and the actual raw data for DSDECOD codelist, generating this console warning:
-# "These terms could not be mapped per the controlled terminology:
-# "Randomized", "Completed", "Study Terminated by Sponsor", "Screen Failure", 
-# and "Lost to Follow-Up".
-# To fix this, I will create an updated DS-specific CT correction
-# table here, based on the collected value from ds_raw.
+### Map DSDECOD
 
 dsdecod_clst <- "C66727"
 
@@ -141,9 +151,8 @@ study_ct %>%
   ) %>%
   dplyr::arrange(term_value)
 
-# Update the CT in a new CT dataset for DSDECOD, for terms that were unable to map, based on
-# warning in console
-
+# Map collected values from IT.DSDECOD variable to correct CT
+# per CDISC SDTM CT document in the ds_ct_updates table below.
 ds_ct_updates <- tibble::tribble(
   ~codelist_code, ~collected_value,                ~term_value,
   dsdecod_clst,   "Randomized",                    "RANDOMIZED",
@@ -153,7 +162,6 @@ ds_ct_updates <- tibble::tribble(
   dsdecod_clst,   "Lost to Follow-Up",              "LOST TO FOLLOW-UP"
 )
 
-# add necessary variables into the new CT
 ds_ct_updates <- ds_ct_updates %>%
   dplyr::mutate(
     term_code = NA_character_,
@@ -163,21 +171,25 @@ ds_ct_updates <- ds_ct_updates %>%
     raw_codelist = "DSDECOD"
   )
 
-# merge in the updated mappings into the working CT specification
+# merge the new records into the working CT specification
 study_ct_ds <- study_ct %>%
+  
+  # Keep every row except the rows in the DSDECOD codelist 
+  # whose collected value appears in ds_ct_updates
   dplyr::filter(
     !(
       codelist_code == dsdecod_clst &
         collected_value %in% ds_ct_updates$collected_value
     )
   ) %>%
+  
+  # add in the new records
   dplyr::bind_rows(ds_ct_updates)
 
-### SD 7/20/2026 CT Updates end
-
-### Now, derive DSDECOD using the updated study_ct_ds and assign_ct from sdtm.oak
+### Now, derive DSDECOD using the edited CT; and assign_ct from sdtm.oak
 
 ds <- ds %>%
+  
   # Map DSDECOD;  CT codelist_code = C66727; Rule = "If OTHERSP is null then map IT.DSDECOD 
   # to DSDECOD, else map OTHERSP to DSDECOD
   assign_ct(
@@ -188,10 +200,9 @@ ds <- ds %>%
     ct_clst = "C66727",
     id_vars = oak_id_vars()
   ) %>%
+  
   # Add condition; when OTHERSP is not null, replace original DSDECOD mapping 
   # with collected text in OTHERSP.
-  # One question - there does not appear to be CT for the collected values of OTHERSP.
-  # Is this mapping subject to CT based on DSCAT? See SDTMIG v3.4 notes for DSDECOD.
   assign_no_ct(
     raw_dat = ds_raw_othersp,
     raw_var = "OTHERSP",
@@ -208,6 +219,7 @@ ds <- ds %>%
   # We will use hardcode_no_ct and condition_add
 
 ds <- ds %>%
+  
   # If OTHERSP is missing and IT.DSDECOD = 'Randomized', 
   # assign DSCAT = 'PROTOCOL MILESTONE'
   hardcode_no_ct(
@@ -220,6 +232,7 @@ ds <- ds %>%
     tgt_val = "PROTOCOL MILESTONE",
     id_vars = oak_id_vars()
   ) %>%
+  
   # If OTHERSP is missing and IT.DSDECOD is not 'Randomized', 
   # assign DSCAT = 'DISPOSITION EVENT'
   hardcode_no_ct(
@@ -279,13 +292,8 @@ ds <- ds %>%
 # Derivation Rule (VISIT): map INSTANCE to VISIT according to CT in study_ct.
 # Derivation Rule (VISITNUM): map INSTANCE to VISITNUM according to CT in study_ct.
 
-
-# After first try, got a console warning "These terms could not be mapped per the 
-# controlled terminology: "Ambul Ecg Removal", "Unscheduled 6.1", "Unscheduled 1.1", 
-# "Unscheduled 5.1", "Unscheduled 4.1", "Unscheduled 8.2", and "Unscheduled 13.1"."
-
-# To resolve the CT issues, we will add to/edit study_ct file based on our collected VISIT data.
-
+# Resolve CT issues here for VISIT mapping, following the same process
+# as earlier in this program. 
 visit_clst <- "VISIT"
 
 # View the VISIT CT from the study_ct dataset
@@ -299,9 +307,12 @@ study_ct %>%
   ) %>%
   dplyr::arrange(term_value)
 
-# Update the CT in a new CT dataset for VISIT, for terms that were unable to map, based on
-# warning in console
-
+# Update the CT in a new CT dataset for VISIT, for terms that were unable to map.
+# For VISIT/VISITNUM, there are more visits/visit numbers in the raw data
+# than there are values in the collected_value variable.
+#
+# To fix this, I will follow the example of other records to standardize the
+# records that do not have a CT value.
 ds_ct_updates_2 <- tibble::tribble(
   ~codelist_code, ~collected_value,                ~term_value,
   visit_clst,   "Ambul Ecg Removal",            "AMBUL ECG REMOVAL",
@@ -313,7 +324,7 @@ ds_ct_updates_2 <- tibble::tribble(
   visit_clst,   "Unscheduled 13.1", "UNSCHEDULED 13.1"
 )
 
-# add necessary variables into the new CT
+# add necessary records into the CT
 ds_ct_updates_2 <- ds_ct_updates_2 %>%
   dplyr::mutate(
     term_code = NA_character_,
@@ -333,8 +344,7 @@ study_ct_ds_visit <- study_ct %>%
   ) %>%
   dplyr::bind_rows(ds_ct_updates_2)
 
-### CT Updates for VISIT end
-
+# Proceed with derivation for VISIT
 ds <- ds %>%
   assign_ct(
     raw_dat = ds_raw,
@@ -345,8 +355,8 @@ ds <- ds %>%
     id_vars = oak_id_vars()
   )
 
-# To resolve the CT issues, we will add to/edit study_ct file based on our collected VISITNUM data.
-
+# Resolve CT issues here for VISITNUM mapping, following the same process
+# as earlier in this program. 
 visitnum_clst <- "VISITNUM"
 
 # View the VISITNUM CT from the study_ct dataset
@@ -360,9 +370,8 @@ study_ct %>%
   ) %>%
   dplyr::arrange(term_value)
 
-# Update the CT in a new CT dataset for VISITNUM, for terms that were unable to map, based on
-# warning in console
-
+# Update the CT in a new CT dataset for VISITNUM, for terms that were unable
+# to map. 
 ds_ct_updates_3 <- tibble::tribble(
   ~codelist_code, ~collected_value,                ~term_value,
   visitnum_clst,   "Ambul Ecg Removal",            "6",
@@ -374,7 +383,7 @@ ds_ct_updates_3 <- tibble::tribble(
   visitnum_clst,   "Unscheduled 13.1", "13.1"
 )
 
-# add necessary variables into the new CT
+# add necessary records into the new CT
 ds_ct_updates_3 <- ds_ct_updates_3 %>%
   dplyr::mutate(
     term_code = NA_character_,
@@ -393,8 +402,6 @@ study_ct_ds_visitnum <- study_ct %>%
     )
   ) %>%
   dplyr::bind_rows(ds_ct_updates_3)
-
-### CT Updates for VISITNUM end
 
 ds <- ds %>%
   assign_ct(
