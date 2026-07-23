@@ -198,55 +198,47 @@ tbl_gt <- tbl1 %>%
 
 
 ###########################################################################
-# STEP 5) Export Output as HTML and PDF, Generate Log File
+# STEP 5) Export Output as HTML, Generate Log File
 # Source A) https://gt.rstudio.com/reference/gtsave.html?q=html#examples
 ###########################################################################
 
+html_file <- file.path(output_dir, "teae_summary_table.html")
+
+# HTML Output
 # Since GT objects support HTML output, we will output to HTML using gtsave()
 gt::gtsave(
   data = tbl_gt,
-  filename = "teae_summary_table.html",
+  filename = basename(html_file),
   path = output_dir,
   inline_css = TRUE
 )
 
-browseURL(
-  normalizePath(
-    "Question_3_TLG/output/teae_summary_table.html"
-  )
+# To be able to view the HTML file in a readable way on GitHub,
+# we will also output as an HTML file in a GitHub Pages directory
+
+docs_dir <- "docs/Question_3_TLG"
+
+# Create the docs directory 
+dir.create(
+  docs_dir,
+  recursive = TRUE,
+  showWarnings = FALSE
 )
 
-# On GitHub, we aren't able to view the html file as a table. Let's also output as a pdf
-# for readability on GitHub. To do this, I have to install the webshot2 package, as
-# gt package uses webshot2 to create a PDF output.
-
-library(webshot2)
-library(chromote)
-
-old_chrome_args <- chromote::get_chrome_args()
-
-chromote::set_chrome_args(
-  unique(
-    c(
-      old_chrome_args,
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage"
-    )
-  )
-)
-
+# Save a second copy for GitHub Pages
 gt::gtsave(
   data = tbl_gt,
-  filename = "teae_summary_table.pdf",
-  path = output_dir
+  filename = "teae_summary_table.html",
+  path = docs_dir,
+  inline_css = TRUE
 )
-
 
 #log
 cat("\n========================================\n")
 cat("Program completed successfully\n")
 cat("Completed:", format(Sys.time()), "\n")
+cat("HTML output created:", html_file, "\n")
+cat("GitHub Pages copy created:", file.path(docs_dir, "teae_summary_table.html"), "\n")
 cat("========================================\n")
 
 sink()
