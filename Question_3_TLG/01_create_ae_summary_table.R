@@ -1,6 +1,6 @@
 #############################################################################
 # 
-# Program Name : q3_01_create_ae_summary_table.R
+# Program Name : 01_create_ae_summary_table.R
 #
 # Purpose: Generate TEAE Summary by SOC and PT, Table using {gtsummary}
 #
