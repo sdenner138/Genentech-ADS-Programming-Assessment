@@ -21,7 +21,7 @@ dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(log_dir, recursive = TRUE, showWarnings = FALSE)
 
 output_file <- file.path(output_dir, "teae_summary_table.pdf")
-log_file <- file.path(log_dir, "q3_01_create_teae_summary_table.log")
+log_file <- file.path(log_dir, "01_create_teae_summary_table.log")
 
 ### Start Log
 sink(log_file, split = TRUE)
