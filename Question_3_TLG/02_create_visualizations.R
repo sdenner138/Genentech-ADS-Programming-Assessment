@@ -185,7 +185,8 @@ cat("========================================\n\n")
 ## for the top 10 most frequent AE's.
 
 ## first, to filter to the top 10 most frequent AE's, we need to 
-## count the number of times each AE occurred (count 1x per subject)
+## count the number of times each AE occurred.
+## We will count a subject once within each AETERM.
 
 ae_freq <- adae %>%
   # select distinct AETERM per USUBJID
@@ -199,20 +200,73 @@ t10 <- ae_freq %>%
   arrange(desc(n)) %>%
   slice_head(n=10)
 
+##################################################################
+# PLOT 2, STEP 2) Calculate Incidence Rate and Clopper-Pearson CI
+##################################################################
+
 ## To calculate incidence rate, we can divide #of cases/N, where
 ## N = the number of subjects in ADSL.
 
 N <- pharmaverseadam::adsl %>%
+  filter(
+    # filter to subjects who were not screen failures
+    SAFFL == "Y"
+  ) %>%
   distinct(USUBJID) %>%
   # count the number of nows
   nrow()
 
 t10 <- t10 %>%
   mutate(
-    incidence = n/N
+    inc_check = n/N
   ) %>%
-  # Clopper-Pearson CI
+  
+  # Calculate incidence rate and Clopper-Pearson CI
   # SOURCE: https://search.r-project.org/CRAN/refmans/epiR/html/epi.conf.html
+  # We can use the epi.conf() function to calculate the Clopper-Pearson CI
+  # for an incidence rate. To do this we have to convert the dataset into a
+  # matrix.
+  rowwise() %>%
   mutate(
-    ci = epi.conf
+    ci_result = list(
+      epiR::epi.conf(
+        dat = matrix(
+          c(n, N),
+          nrow = 1,
+          ncol = 2
+        ),
+        ctype = "inc.risk",
+        method = "clopper-pearson",
+        N = N,
+        design =1,
+        conf.level = 0.95
+      )
+    ),
+    
+    # Get the estimate and confidence limits
+    incidence = ci_result[1, "est"],
+    lower_ci = ci_result[1, "lower"],
+    upper_ci = ci_result[1,"upper"]
+  ) %>%
+  
+  # Convert the proportions to percentages for the plot
+  mutate(
+    incidence_pct = incidence*100,
+    lower_pct = lower_ci*100,
+    upper_pct = upper_ci*100
+  ) %>%
+  select(-c(ci_result, inc_check, incidence, lower_ci, upper_ci))
+
+##################################################################
+# PLOT 2, STEP 3) Generate the forest plot
+##################################################################
+
+## Convert AETERM values to factor to control the display order
+t10 <- t10 %>%
+  arrange(desc(incidence_pct)) %>%
+  mutate(
+    AETERM = factor(
+      AETERM,
+      levels = AETERM
+    )
   )
