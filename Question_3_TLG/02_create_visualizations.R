@@ -94,9 +94,6 @@ dat1 <- adae %>%
 ####################################################################
 # PLOT 1, STEP 2) Generate the visualization
 # Source) https://ggplot2-book.org/getting-started
-
-# Bonus: I will create an interactive plot, in addition, to showcase
-# skills in ggplotly function in plotly package
 #####################################################################
 
 ## Define the ggplot object - this gives us the background
@@ -162,7 +159,7 @@ plot1 <- ggplot(
         )
 
 ########################################################################
-# PLOT 1, STEP 3) Save and output both plots (one as PNG, one as html)
+# PLOT 1, STEP 3) Save and output plot
 ########################################################################
 
 # Static PNG
@@ -263,10 +260,111 @@ t10 <- t10 %>%
 
 ## Convert AETERM values to factor to control the display order
 t10 <- t10 %>%
-  arrange(desc(incidence_pct)) %>%
+  arrange(incidence_pct) %>%
   mutate(
     AETERM = factor(
       AETERM,
       levels = AETERM
     )
   )
+
+## Plot
+## Source: https://ggplot2.tidyverse.org/reference/geom_linerange.html
+
+plot2 <- ggplot(
+  t10, aes(x =incidence_pct, y = AETERM)
+) +
+  
+  # We can use a horizontal error bars plot to plot the 95% CI
+  geom_errorbar(
+    
+    # Create the 95% CI on the plot
+    aes(xmin = lower_pct, xmax = upper_pct),
+    
+    # Display horizontally
+    orientation = "y",
+    
+    height = 0.25,
+    width = 0.25
+    
+  ) +
+  
+  ## Add in points at the true incidence pct
+  geom_point(
+    size = 3
+  ) + 
+  
+  ## Add in text to show the incidence
+  geom_text(
+    aes(
+      
+      ## Place a statistic next to each confidence interval
+      x = upper_pct,
+      label = sprintf(
+      "%.1f%% (95%% CI: %.1f, %.1f)",
+      incidence_pct, lower_pct, upper_pct
+      )
+    ),
+    hjust = -0.1, size = 3.2
+  ) +
+  
+  ## Provide x-axis space for the labels
+  scale_x_continuous(
+    
+    # fit the x axis labels with a %
+    labels = function(x) paste0(x, "%"),
+    expand = expansion(mult = c(0.02, 0.35))
+    ) +
+  
+  ## Add Title and axis titles
+  labs(
+    title = "Top 10 Most Frequent Adverse Events",
+    subtitle = paste0(
+      "N = ", N, " subjects in the safety population; 95% Clopper-Pearson Confidence Intervals"
+      ),
+    x = "Percentage of Subjects (%)",
+    y = NULL,
+    caption = "NOTE 1: Point estimates represent the percentage of subjects with each adverse event term.\nNOTE 2: Subjects were counted once per adverse event term."
+    
+  ) +
+  
+  ## Add in a bw theme to match the first plot
+  theme_bw() +
+  
+  ## Add in extra space into the plot margins to allow for
+  ## space for captions, and Center the title and subtitle
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"),
+        plot.subtitle = element_text(hjust = 0.5, face = "bold"),
+        plot.caption = element_text(hjust = 0, size = 9, lineheight = 1.2),
+        plot.margin = margin(t=20,r=25,b=20,l=10),
+        
+        # Erase horizontal grid lines for readability
+        panel.grid.minor = element_blank(),
+        panel.grid.major.y = element_blank()
+  )
+  
+########################################################################
+# PLOT 2, STEP 4) Save and output plot
+########################################################################
+
+# Static PNG
+ggsave(filename = output_file2,
+       plot = plot2,
+       width = 9, height = 6, units = "in", dpi = 300, bg = "white"
+)
+
+cat("========================================\n")
+cat("Question 3 Plot 2 Script Complete\n")
+cat("Completed:", format(Sys.time()), "\n")
+cat("========================================\n\n")
+
+########################################################################
+# FINAL STEP) Close the log
+########################################################################
+
+cat("\n========================================\n")
+cat("Program completed successfully\n")
+cat("Completed:", format(Sys.time()), "\n")
+cat("========================================\n")
+
+sink()
