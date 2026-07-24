@@ -39,6 +39,7 @@ cat("========================================\n\n")
 
 library(ggplot2)
 library(dplyr)
+library(epiR)
 
 adae <- pharmaverseadam::adae
 
@@ -179,3 +180,39 @@ cat("========================================\n\n")
 ##########################################################
 # PLOT 2, STEP 1) Prepare data for visualization
 ##########################################################
+
+## for this plot we need to calculate and display the incidence rates
+## for the top 10 most frequent AE's.
+
+## first, to filter to the top 10 most frequent AE's, we need to 
+## count the number of times each AE occurred (count 1x per subject)
+
+ae_freq <- adae %>%
+  # select distinct AETERM per USUBJID
+  distinct(USUBJID,AETERM) %>%
+  # count the instances of each AETERM after limiting to distinct
+  count(AETERM, name = "n")
+
+## sort descending by n to get the top ten most frequent AE's
+
+t10 <- ae_freq %>%
+  arrange(desc(n)) %>%
+  slice_head(n=10)
+
+## To calculate incidence rate, we can divide #of cases/N, where
+## N = the number of subjects in ADSL.
+
+N <- pharmaverseadam::adsl %>%
+  distinct(USUBJID) %>%
+  # count the number of nows
+  nrow()
+
+t10 <- t10 %>%
+  mutate(
+    incidence = n/N
+  ) %>%
+  # Clopper-Pearson CI
+  # SOURCE: https://search.r-project.org/CRAN/refmans/epiR/html/epi.conf.html
+  mutate(
+    ci = epi.conf
+  )
