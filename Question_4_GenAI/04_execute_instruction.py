@@ -122,10 +122,10 @@ count, ids = filter_subjects(
 )
 
 print("Structured Python object:")
-print(test_instruction)
+print(instruction)
 
 print("\nStructured JSON output:")
-print(test_instruction.model_dump_json(indent=2))
+print(instruction.model_dump_json(indent=2))
 
 print(f"\nUnique subject count: {count}")
 
