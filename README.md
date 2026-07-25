@@ -92,6 +92,7 @@ This folder stores information that GitHub Pages can use to render the TEAE summ
 ## metadata
 
 This folder stores the study_ct file necessary for use in Question 1, SDTM DS generation.
+
 ---
 
 # Software
