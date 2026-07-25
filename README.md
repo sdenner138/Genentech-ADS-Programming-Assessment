@@ -9,13 +9,13 @@ The assessment demonstrates clinical programming skills using Pharmaverse in R a
 1. SDTM dataset creation
 2. ADaM dataset creation
 3. Tables, Listings, and Graphs (TLGs)
-4. Generative AI Clinical Data Assistant (LLM & LangChain)
+4. Generative AI Clinical Data Assistant (Python, LLM, & LangChain)
 
 ---------------------
 
 # Repository Structure
 
-## Rendered Output
+## Note on Rendered HTML Output (Question 3)
 The Question 3 summary TEAE table is provided as both an interactive HTML output
 and a corresponding HTML file. Please view the rendered table below:
 
@@ -55,7 +55,7 @@ Deliverables:
 2. TEAE Summary visualization script
 3. Output table:
   - [View the rendered TEAE summary table](https://sdenner138.github.io/Genentech-ADS-Programming-Assessment/Question_3_TLG/teae_summary_table.html)
-  - Source program: `Question_3_TLG/q3_01_create_ae_summary_table.R`
+  - Source program: `Question_3_TLG/01_create_ae_summary_table.R`
   - Output file: `Question_3_TLG/output/teae_summary_table.html`
 4. Two Output PNG files
 5. Program logs
@@ -67,19 +67,32 @@ Deliverables:
 Develop a GenAI Clinical Data Assistant using Python.
 Deliverables: 
 
-1. Code of the solution developed
-2. Test script
-3. Example outputs
+1. Code of the agentic solution developed using LangChain and OpenAI
+2. Test script 
+3. Example outputs (PNG images of execution in Posit Cloud Terminal)
+
+Also Included in Folder:
+
+1. Developmental Programs 
+    - A series of 5 scripts (00-04) that served as incremental learning exercises, building up to creation of GenAI agent.
+    - The learning process included:
+        A. 00 - exporting ADAE from R environment into CSV format.
+        B. 01 - exploring ADAE using Pandas functions.
+        C. 02 - Developing a Pandas filtering function outside of the Agent environment
+        D. 03 - Learning and understanding Pydantic schemas and validation
+        E. 04 - Stringing together the previous 4 scripts into a working pipeline that does not use any LLM.
+---
+
+## docs
+
+This folder stores information that GitHub Pages can use to render the TEAE summary table output as a interactive HTML file.
 
 ---
 
-## Documentation
+## metadata
 
-Contains supplementary documentation including:
-
-- R Session Information
-- Additional project documentation
-
+This folder stores the study_ct file necessary for use in Question 1, SDTM DS generation.
+---
 
 # Software
 
@@ -88,6 +101,7 @@ Contains supplementary documentation including:
 - Python
 - Git
 - GitHub
+- ChatGPT
 
 ---
 
@@ -104,10 +118,14 @@ Contains supplementary documentation including:
 
 # Repository Status
 
+NOTE TO REVIEWER: Due to being out of town the weekend of 7/18/2026, I received
+an extension for delivery of this examination until 7/27/2026.
+
 1. [7/15/2026 SD] GitHub Repository shell created, including file structure.
 2. [7/20/2026 SD] SDTM deliverables generated.
 3. [7/21/2026 SD] ADaM deliverables generated.
 4. [7/22/2026 SD] Summary TEAE table and corresponding deliverables generated.
+5. [7/25/2026 SD] GenAI Clinical Trial Data Agent and corresponding deliverables generated.
 
 ---
 
