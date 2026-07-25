@@ -120,7 +120,7 @@ This folder stores the study_ct file necessary for use in Question 1, SDTM DS ge
 # Repository Status
 
 NOTE TO REVIEWER: Due to being out of town the weekend of 7/18/2026, I received
-an extension for delivery of this examination until 7/27/2026.
+an extension for delivery of this examination to 7/27/2026.
 
 1. [7/15/2026 SD] GitHub Repository shell created, including file structure.
 2. [7/20/2026 SD] SDTM deliverables generated.
